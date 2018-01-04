@@ -1,0 +1,23 @@
+version: '3'
+networks:
+  prom_net:
+    driver: bridge
+services:
+  server:
+    container_name: server
+    build: .
+    networks:
+      - prom_net
+    ports:
+      - "8080:8080" # Users need to be able to hit it
+    restart: unless-stopped
+  prom:
+    image: prom/prometheus:latest
+    networks:
+      - prom_net
+    ports:
+      - "9090:9090" # Users need to be able to get its UI
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+    restart: unless-stopped
+
