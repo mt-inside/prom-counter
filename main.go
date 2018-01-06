@@ -9,27 +9,26 @@ import (
 )
 
 var (
-	// TODO: use a vec counter and use a label for each http path (this is probably a library function)
-	rootHits = prometheus.NewCounter(
+	hits = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "root_hits",
-			Help: "Requests to /",
+			Name: "hits",
+			Help: "Requests to path",
 		},
+		[]string{"path"},
 	)
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("hit root")
-	rootHits.Inc()
+	log.Printf("hit %s", r.URL.Path)
+	hits.With(prometheus.Labels{"path": r.URL.Path}).Inc()
 	fmt.Fprintf(w, "hi")
 }
 
 func init() {
-	prometheus.MustRegister(rootHits)
+	prometheus.MustRegister(hits)
 }
 
 func main() {
-
 	metrics_mux := http.NewServeMux()
 	metrics_mux.Handle("/metrics", promhttp.Handler())
 	metrics_server := http.Server{
