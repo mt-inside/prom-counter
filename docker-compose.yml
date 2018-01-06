@@ -3,8 +3,8 @@ networks:
   prom_net:
     driver: bridge
 services:
-  server:
-    container_name: server
+  counter:
+    container_name: counter
     build: .
     networks:
       - prom_net
