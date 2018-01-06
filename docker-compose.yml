@@ -9,6 +9,7 @@ services:
     networks:
       - prom_net
     ports:
+      - "8085"
       - "8080:8080" # Users need to be able to hit it
     restart: unless-stopped
   prom:
