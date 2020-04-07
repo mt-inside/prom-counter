@@ -1,6 +1,12 @@
 run:
-	go run *go
+	go run main.go
 
-run-docker:
+run-compose:
 	docker-compose build
 	docker-compose up
+
+image:
+	docker build . -t docker.io/mtinside/prom-counter:latest
+
+image-push: image
+	docker push docker.io/mtinside/prom-counter:latest
